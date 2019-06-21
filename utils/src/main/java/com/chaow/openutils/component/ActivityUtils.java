@@ -12,11 +12,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : Char
@@ -24,7 +22,7 @@ import java.util.Map;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public class ActivityUtils {
+public final class ActivityUtils {
 
     private static final ActivityLifecycle ACTIVITY_LIFECYCLE = new ActivityLifecycle();
 
@@ -41,6 +39,7 @@ public class ActivityUtils {
             } else {
                 sApplication = app;
             }
+
             sApplication.registerActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
         } else {
             if (app != null && app.getClass() != sApplication.getClass()) {
@@ -59,7 +58,7 @@ public class ActivityUtils {
             Object thread = activityThread.getMethod("currentActivityThread").invoke(null);
             Object app = activityThread.getMethod("getApplication").invoke(thread);
             if (app == null) {
-                throw new NullPointerException("u should init first");
+                throw new NullPointerException("please init first");
             }
             return (Application) app;
         } catch (NoSuchMethodException e) {
@@ -71,7 +70,7 @@ public class ActivityUtils {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        throw new NullPointerException("u should init first");
+        throw new NullPointerException("please init first");
     }
 
     public static void finishAllActivity() {
@@ -156,7 +155,7 @@ public class ActivityUtils {
             Object at = activityThread.getMethod("currentActivityThread").invoke(null);
             Object app = activityThread.getMethod("getApplication").invoke(at);
             if (app == null) {
-                throw new NullPointerException("u should init first");
+                throw new NullPointerException("please init first");
             }
             init((Application) app);
             return sApplication;
@@ -169,7 +168,7 @@ public class ActivityUtils {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        throw new NullPointerException("u should init first");
+        throw new NullPointerException("please init first");
     }
 
     private static boolean isIntentAvailable(final Intent intent) {
