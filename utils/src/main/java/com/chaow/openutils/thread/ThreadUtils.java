@@ -6,7 +6,10 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -50,26 +53,8 @@ public final class ThreadUtils {
         new Handler(Looper.getMainLooper()).post(run);
     }
 
-    public static void execute(Runnable run) {
-        getThreadPollProxy().execute(run);
-    }
-
-    public static void execute(Runnable run, String threadName) {
-        getThreadPollProxy(threadName).execute(run);
-    }
-
-    public static void execute(Runnable run, String threadName, int priority) {
-        getThreadPollProxy(threadName, priority).execute(run);
-    }
-
     public static ThreadPollProxy getThreadPollProxy() {
-        return getThreadPollProxy(DEFAULT_CORE_POOL_SIZE,
-                DEFAULT_MAXIMUM_POOL_SIZE,
-                DEFAULT_KEEP_ALIVE_TIME,
-                DEFAULT_TIME_UNIT,
-                null,
-                DEFAULT_PRIOPITY
-        );
+        return getThreadPollProxy(null);
     }
 
     public static ThreadPollProxy getThreadPollProxy(String threadName) {
@@ -102,25 +87,22 @@ public final class ThreadUtils {
 
     /** 通过ThreadPoolExecutor的代理类来对线程池的管理 */
     public static class ThreadPollProxy {
-        private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
-        /** 线程池执行者 ，java内部通过该api实现对线程池管理 */
         private ThreadPoolExecutor mThreadPoolExecutor;
+        private ScheduledExecutorService mScheduledExecutorService;
         private int mCorePoolSize;
         private int mMaximumPoolSize;
         private long mKeepAliveTime;
         private TimeUnit mTimeUnit;
-        private BackGroundThreadFactory mThreadFactory;
+        private BasicThreadFactory mThreadFactory;
 
         public ThreadPollProxy(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit timeUnit, String threadName, int priority) {
             this.mCorePoolSize = corePoolSize;
             this.mMaximumPoolSize = maximumPoolSize;
             this.mKeepAliveTime = keepAliveTime;
             this.mTimeUnit = timeUnit;
-            String tName = TextUtils.isEmpty(threadName) ? String.format("ThreadUtils-pool-%s-thread", POOL_NUMBER.getAndIncrement()) : threadName;
-            mThreadFactory = new BackGroundThreadFactory(tName, priority);
+            mThreadFactory = new BasicThreadFactory.Builder().priority(priority).namingPattern(threadName).build();
         }
 
-        /** 对外提供一个执行任务的方法 */
         public void execute(Runnable r) {
             if (mThreadPoolExecutor == null || mThreadPoolExecutor.isShutdown()) {
                 mThreadPoolExecutor = new ThreadPoolExecutor(
@@ -133,32 +115,27 @@ public final class ThreadUtils {
             }
             mThreadPoolExecutor.execute(r);
         }
-    }
 
-    /** 创建带名字的线程 */
-    public static class BackGroundThreadFactory implements ThreadFactory {
-        /** 线程名 */
-        private final String threadName;
-        /** 线程优先级 */
-        private int threadPriority = DEFAULT_PRIOPITY;
-
-        public BackGroundThreadFactory(String threadName, int priority) {
-            this.threadName = threadName;
-            this.threadPriority = priority;
-        }
-
-        public BackGroundThreadFactory(String threadName) {
-            this.threadName = threadName;
-        }
-
-        @Override
-        public Thread newThread(@NonNull Runnable r) {
-            Thread t = new Thread(r, threadName);
-            if (t.isDaemon()) {
-                t.setDaemon(false);
+        public void schedule(Runnable r, long delay, TimeUnit timeUnit) {
+            if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
+                mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
             }
-            t.setPriority(threadPriority);
-            return t;
+            mScheduledExecutorService.schedule(r, delay, timeUnit);
+        }
+
+        public void scheduleAtRate(Runnable r, long initDelay, long rate, TimeUnit timeUnit) {
+            if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
+                mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
+            }
+            mScheduledExecutorService.scheduleAtFixedRate(r, initDelay, rate, timeUnit);
+        }
+
+        public void scheduleWithDelay(Runnable r, long initDelay, long delay, TimeUnit timeUnit) {
+            if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
+                mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
+            }
+            mScheduledExecutorService.scheduleWithFixedDelay(r, initDelay, delay, timeUnit);
         }
     }
+
 }
