@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.chaow.openutils.Validate;
 import com.chaow.openutils.basic.StringUtils;
+import com.chaow.openutils.builder.Builder;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -106,7 +107,7 @@ public class BasicThreadFactory implements ThreadFactory {
         return "thread:{name:" + namingPattern + ",priority:" + priority + ",deamon:" + daemon + "}";
     }
 
-    public static class Builder {
+    public static class Builder implements com.chaow.openutils.builder.Builder<BasicThreadFactory> {
         private static final String DEFAULT_NAMING_PATTERN = "ThreadUtils-pool-thread-%d";
 
         /** The wrapped factory. */
@@ -148,12 +149,11 @@ public class BasicThreadFactory implements ThreadFactory {
             daemon = false;
         }
 
-        public BasicThreadFactory build() {
+        @Override
+        public BasicThreadFactory builder() {
             final BasicThreadFactory factory = new BasicThreadFactory(this);
             reset();
-            System.out.println(factory.toString());
             return factory;
         }
-
     }
 }
