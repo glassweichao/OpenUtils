@@ -8,6 +8,6 @@ package com.chaow.openutils.builder;
  */
 public interface Builder<T> {
 
-    T builder();
+    T build();
 
 }

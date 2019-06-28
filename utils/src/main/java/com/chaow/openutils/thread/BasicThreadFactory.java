@@ -19,11 +19,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  * <p>
- * A <em>builder</em> class for creating instances of {@code
+ * A <em>build</em> class for creating instances of {@code
  * BasicThreadFactory}.
  * </p>
  * <p>
- * Using this builder class instances of {@code BasicThreadFactory} can be
+ * Using this build class instances of {@code BasicThreadFactory} can be
  * created and initialized. The class provides methods that correspond to
  * the configuration options supported by {@code BasicThreadFactory}. Method
  * chaining is supported.
@@ -108,7 +108,6 @@ public class BasicThreadFactory implements ThreadFactory {
     }
 
     public static class Builder implements com.chaow.openutils.builder.Builder<BasicThreadFactory> {
-        private static final String DEFAULT_NAMING_PATTERN = "ThreadUtils-pool-thread-%d";
 
         /** The wrapped factory. */
         private ThreadFactory wrappedFactory;
@@ -116,10 +115,10 @@ public class BasicThreadFactory implements ThreadFactory {
         private String namingPattern;
 
         /** The priority. */
-        private int priority;
+        private Integer priority;
 
         /** The daemon flag. */
-        private boolean daemon;
+        private Boolean daemon;
 
         public Builder wrappedFactory(final ThreadFactory factory) {
             Validate.notNull(factory, "Wrapped ThreadFactory must not be null!");
@@ -129,7 +128,7 @@ public class BasicThreadFactory implements ThreadFactory {
         }
 
         public Builder namingPattern(final String pattern) {
-            namingPattern = StringUtils.checkEmpty(pattern, DEFAULT_NAMING_PATTERN);
+            namingPattern = pattern;
             return this;
         }
 
@@ -144,13 +143,14 @@ public class BasicThreadFactory implements ThreadFactory {
         }
 
         public void reset() {
-            namingPattern = DEFAULT_NAMING_PATTERN;
-            priority = Thread.NORM_PRIORITY;
-            daemon = false;
+            wrappedFactory = null;
+            namingPattern = null;
+            priority = null;
+            daemon = null;
         }
 
         @Override
-        public BasicThreadFactory builder() {
+        public BasicThreadFactory build() {
             final BasicThreadFactory factory = new BasicThreadFactory(this);
             reset();
             return factory;

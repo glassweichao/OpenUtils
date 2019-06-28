@@ -1,12 +1,17 @@
 package com.chaow.openutils.thread;
 
-import com.chaow.openutils.builder.Builder;
+import android.os.Build;
+import android.text.TextUtils;
+
+import com.chaow.openutils.Validate;
+import com.chaow.openutils.basic.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -16,81 +21,80 @@ import java.util.concurrent.TimeUnit;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public final class ThreadPoolProxy {
+public enum ThreadPoolProxy {
 
-    private final static Map<String, ThreadPoolExecutor> THREAD_POOL_EXECUTOR_MAP = new HashMap<>();
-    private final static Map<String, ScheduledExecutorService> SCHEDULED_EXECUTOR_SERVICE_MAP = new HashMap<>();
+    /** 实例 */
+    INSTANCE;
 
-    private ThreadPoolExecutor mThreadPoolExecutor;
-    private ScheduledExecutorService mScheduledExecutorService;
-    private int mCorePoolSize;
-    private int mMaximumPoolSize;
-    private long mKeepAliveTime;
-    private TimeUnit mTimeUnit;
-    private BasicThreadFactory mThreadFactory;
+    private static final String DEFAULT_NAMING_PATTERN = "ThreadUtils-pool-thread-%d";
+    /** CPU数 */
+    public static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    /** 默认线程数-可分配CPU数 */
+    public static final int DEFAULT_CORE_POOL_SIZE = CPU_COUNT;
+    /** 默认最大线程数-可分配CPU数*2 */
+    public static final int DEFAULT_MAXIMUM_POOL_SIZE = CPU_COUNT * 2;
+    /** 默认保活时长-1秒 */
+    public static final long DEFAULT_KEEP_ALIVE_TIME = 1;
+    /** 默认保活时长单位-秒 */
+    private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
+    private final Map<String, ThreadPoolExecutor> THREAD_POOL_EXECUTOR_MAP = new HashMap<>();
+    private final Map<String, ScheduledExecutorService> SCHEDULED_EXECUTOR_SERVICE_MAP = new HashMap<>();
 
-    public ThreadPoolProxy(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit timeUnit, String threadName, int priority) {
-        this.mCorePoolSize = corePoolSize;
-        this.mMaximumPoolSize = maximumPoolSize;
-        this.mKeepAliveTime = keepAliveTime;
-        this.mTimeUnit = timeUnit;
-        mThreadFactory = new BasicThreadFactory.Builder().priority(priority).namingPattern(threadName).build();
+    private ThreadPoolExecutor createDefaultThreadPoolByName(String poolName) {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+                DEFAULT_CORE_POOL_SIZE,
+                DEFAULT_MAXIMUM_POOL_SIZE,
+                DEFAULT_KEEP_ALIVE_TIME,
+                DEFAULT_TIME_UNIT,
+                new LinkedBlockingQueue<Runnable>(),
+                new BasicThreadFactory.Builder().daemon(false).priority(Thread.NORM_PRIORITY).namingPattern(poolName).build());
+        THREAD_POOL_EXECUTOR_MAP.put(poolName, threadPoolExecutor);
+        return threadPoolExecutor;
     }
 
-    private ThreadPoolProxy(Builder builder) {
-
-    }
-
-    public void execute(Runnable r) {
-        if (mThreadPoolExecutor == null || mThreadPoolExecutor.isShutdown()) {
-            mThreadPoolExecutor = new ThreadPoolExecutor(
-                    mCorePoolSize,
-                    mMaximumPoolSize,
-                    mKeepAliveTime,
-                    mTimeUnit,
+    public ThreadPoolExecutor createDefaultThreadPool(int poolSize, int maxPoolSize, int keepAliveTime, TimeUnit timeUnit, String poolName, int priority, boolean daemon) {
+        ThreadPoolExecutor threadPoolExecutor = findThreadPoolExecutorByName(poolName);
+        if (threadPoolExecutor == null) {
+            threadPoolExecutor = new ThreadPoolExecutor(
+                    poolSize,
+                    maxPoolSize,
+                    keepAliveTime,
+                    timeUnit,
                     new LinkedBlockingQueue<Runnable>(),
-                    mThreadFactory);
+                    new BasicThreadFactory.Builder().daemon(daemon).priority(priority).namingPattern(poolName).build());
+            THREAD_POOL_EXECUTOR_MAP.put(poolName, threadPoolExecutor);
         }
-        mThreadPoolExecutor.execute(r);
+        return threadPoolExecutor;
     }
 
-    public void schedule(Runnable r, long delay, TimeUnit timeUnit) {
-        if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
-            mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
-        }
-        mScheduledExecutorService.schedule(r, delay, timeUnit);
+    private ScheduledExecutorService createDefaultScheduleExecutorServiceByName(String poolName) {
+        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(DEFAULT_CORE_POOL_SIZE, new BasicThreadFactory.Builder().daemon(false).priority(Thread.NORM_PRIORITY).namingPattern(poolName).build());
+        SCHEDULED_EXECUTOR_SERVICE_MAP.put(poolName, scheduledExecutorService);
+        return scheduledExecutorService;
     }
 
-    public void scheduleAtRate(Runnable r, long initDelay, long rate, TimeUnit timeUnit) {
-        if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
-            mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
-        }
-        mScheduledExecutorService.scheduleAtFixedRate(r, initDelay, rate, timeUnit);
+    public ScheduledExecutorService createDefaultScheduleExecutorService(String poolName, int priority, boolean daemon) {
+        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(DEFAULT_CORE_POOL_SIZE, new BasicThreadFactory.Builder().daemon(daemon).priority(priority).namingPattern(poolName).build());
+        SCHEDULED_EXECUTOR_SERVICE_MAP.put(poolName, scheduledExecutorService);
+        return scheduledExecutorService;
     }
 
-    public void scheduleWithDelay(Runnable r, long initDelay, long delay, TimeUnit timeUnit) {
-        if (mScheduledExecutorService == null || mScheduledExecutorService.isShutdown()) {
-            mScheduledExecutorService = new ScheduledThreadPoolExecutor(mCorePoolSize, mThreadFactory);
+    public final ThreadPoolExecutor findThreadPoolExecutorByName(String name) {
+        String threadName = StringUtils.checkEmpty(name, DEFAULT_NAMING_PATTERN);
+        ThreadPoolExecutor threadPoolExecutor = THREAD_POOL_EXECUTOR_MAP.get(threadName);
+        if (threadPoolExecutor == null) {
+            threadPoolExecutor = createDefaultThreadPoolByName(threadName);
         }
-        mScheduledExecutorService.scheduleWithFixedDelay(r, initDelay, delay, timeUnit);
+        return threadPoolExecutor;
     }
 
-    public static class Builder implements com.chaow.openutils.builder.Builder<ThreadPoolProxy> {
-        private int mCorePoolSize;
-        private int mMaximumPoolSize;
-        private long mKeepAliveTime;
-        private TimeUnit mTimeUnit;
-
-        public void reset() {
-
+    public final ScheduledExecutorService findScheduledExecutorServiceByName(String name) {
+        String threadName = StringUtils.checkEmpty(name, DEFAULT_NAMING_PATTERN);
+        ScheduledExecutorService scheduledExecutorService = SCHEDULED_EXECUTOR_SERVICE_MAP.get(threadName);
+        if (scheduledExecutorService == null) {
+            scheduledExecutorService = createDefaultScheduleExecutorServiceByName(threadName);
         }
-
-        @Override
-        public ThreadPoolProxy builder() {
-            final ThreadPoolProxy threadPoolProxy = new ThreadPoolProxy(this);
-            reset();
-            return threadPoolProxy;
-        }
+        return scheduledExecutorService;
     }
 
 }

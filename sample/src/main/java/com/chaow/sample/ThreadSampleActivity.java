@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.chaow.openutils.basic.TimeUtils;
 import com.chaow.openutils.thread.ThreadUtils;
 import com.chaow.sample.databinding.ActivityThreadSampleBinding;
 
@@ -46,14 +47,13 @@ public class ThreadSampleActivity extends AppCompatActivity {
     private void initEvent() {
         mBinding.btThreadPool.setOnClickListener(v -> {
             String threadName = mBinding.etThreadName.getText().toString().trim();
-            ThreadUtils.getThreadPollProxy().execute(() -> printMsg("default thread poll"));
-            ThreadUtils.getThreadPollProxy(threadName).execute(() -> printMsg("custom name thread"));
-            ThreadUtils.getThreadPollProxy(threadName + "_anther").execute(() -> printMsg("custom name anther thread"));
-            ThreadUtils.getThreadPollProxy(threadName, 1).execute(() -> printMsg("custom priority thread"));
+            ThreadUtils.execute(() -> printMsg("default thread poll"), null);
+            ThreadUtils.execute(() -> printMsg("custom name thread"), threadName);
+            ThreadUtils.execute(() -> printMsg("custom name anther thread"), threadName + "_anther");
         });
-        mBinding.btDelayPost.setOnClickListener(v -> ThreadUtils.getThreadPollProxy().schedule(() -> printMsg("delay thread" + ATOMIC_INTEGER.addAndGet(1)), 5, TimeUnit.SECONDS));
-        mBinding.btScheduleDelay.setOnClickListener(v -> ThreadUtils.getThreadPollProxy("schedule_with_delay").scheduleWithDelay(() -> printMsg("schedule with delay " + ATOMIC_INTEGER.addAndGet(1)), 1, 1, TimeUnit.SECONDS));
-        mBinding.btScheduleRate.setOnClickListener(v -> ThreadUtils.getThreadPollProxy("schedule_at_rate").scheduleAtRate(() -> printMsg("schedule at rate " + ATOMIC_INTEGER.addAndGet(1)), 1, 1, TimeUnit.SECONDS));
+        mBinding.btDelayPost.setOnClickListener(v -> ThreadUtils.schedule(() -> printMsg("delay thread" + ATOMIC_INTEGER.addAndGet(1)), null, 5, TimeUnit.SECONDS));
+        mBinding.btScheduleDelay.setOnClickListener(v -> ThreadUtils.scheduleWithDelay(() -> printMsg("schedule with delay " + ATOMIC_INTEGER.addAndGet(1)), "schedule_with_delay", 1, 1, TimeUnit.SECONDS));
+        mBinding.btScheduleRate.setOnClickListener(v -> ThreadUtils.scheduleAtRate(() -> printMsg("schedule at rate " + ATOMIC_INTEGER.addAndGet(1)), "schedule_at_rate", 1, 1, TimeUnit.SECONDS));
     }
 
     private synchronized void printMsg(String msg) {
