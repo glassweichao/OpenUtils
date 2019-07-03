@@ -14,5 +14,11 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="thread utils" />
+
+        <Button
+            android:id="@+id/bt_toast_utils"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="toast utils" />
     </LinearLayout>
 </layout>

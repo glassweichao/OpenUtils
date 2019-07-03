@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_rootlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="35dp"
+    android:layout_marginRight="35dp"
+    android:alpha="0.90"
+    android:background="#66000000"
+    android:gravity="center_horizontal"
+    android:minHeight="42dp">
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:minWidth="120dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        tools:text="账号密码错误" />
+
+    <TextView
+        android:id="@+id/tvErrorCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_message"
+        android:gravity="center_horizontal"
+        android:minWidth="120dp"
+        android:paddingBottom="10dp"
+        android:textColor="#ebebeb"
+        android:textSize="12sp"
+        tools:text="[-1048|100001]" />
+
+</RelativeLayout>

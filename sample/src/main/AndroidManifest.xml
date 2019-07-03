@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ThreadSampleActivity" />
+        <activity android:name=".ToastSampleActivity" />
     </application>
 
 </manifest>
