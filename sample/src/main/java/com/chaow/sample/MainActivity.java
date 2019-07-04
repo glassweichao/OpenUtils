@@ -17,5 +17,6 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.btThreadUtils.setOnClickListener(v -> ThreadSampleActivity.start(this));
         mBinding.btToastUtils.setOnClickListener(v -> ToastSampleActivity.start(this));
+        mBinding.btPhoneUtils.setOnClickListener(v -> PhoneDeviceSampleActivity.start(this));
     }
 }

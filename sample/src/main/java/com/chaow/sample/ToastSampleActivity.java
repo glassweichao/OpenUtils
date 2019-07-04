@@ -3,9 +3,11 @@ package com.chaow.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -39,8 +41,12 @@ public class ToastSampleActivity extends AppCompatActivity {
 
     private void initEvent() {
         mBinding.btCustomToast.setOnClickListener(v -> {
-            View toastLayout = LayoutInflater.from(this).inflate(R.layout.toast_custom_layout, null);
-            ToastUtils.showToast(this, toastLayout, Toast.LENGTH_SHORT, Gravity.CENTER, 0, 0, "toast内容1");
+//            ToastUtils.showToast(this, R.layout.toast_custom_layout, Toast.LENGTH_SHORT, "toast内容1");
+            TextView textView = new TextView(this);
+            textView.setTextColor(0xff000000);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f);
+            textView.setBackgroundColor(0x60000000);
+            ToastUtils.showToast(this, textView, Toast.LENGTH_SHORT, Gravity.CENTER, "toast内容1", "toast内容1");
         });
     }
 }

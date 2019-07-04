@@ -20,5 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="toast utils" />
+
+        <Button
+            android:id="@+id/bt_phone_utils"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="phone utils" />
     </LinearLayout>
 </layout>
