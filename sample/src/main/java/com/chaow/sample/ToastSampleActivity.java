@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +40,7 @@ public class ToastSampleActivity extends AppCompatActivity {
     private void initEvent() {
         mBinding.btCustomToast.setOnClickListener(v -> {
             View toastLayout = LayoutInflater.from(this).inflate(R.layout.toast_custom_layout, null);
-            ToastUtils.showToast(this, "自定义", toastLayout, Gravity.CENTER);
+            ToastUtils.showToast(this, toastLayout, Toast.LENGTH_SHORT, Gravity.CENTER, 0, 0, "toast内容1");
         });
     }
 }
