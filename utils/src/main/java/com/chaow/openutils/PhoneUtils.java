@@ -1,11 +1,30 @@
 package com.chaow.openutils;
 
+import android.app.ActivityManager;
+import android.app.AppOpsManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * @author : Char
@@ -27,6 +46,20 @@ public final class PhoneUtils {
      */
     private static Vibrator getVibrator(Context context) {
         return (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    /**
+     * 当前设备是否是手机
+     *
+     * @return
+     */
+    public static boolean isPhone() {
+        TelephonyManager tm = getTelephonyManager();
+        return tm.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
+    }
+
+    private static TelephonyManager getTelephonyManager() {
+        return (TelephonyManager) OpenUtils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     /**
@@ -93,5 +126,60 @@ public final class PhoneUtils {
         }
         vibrator.cancel();
     }
+
+    /**
+     * 检查是否有手机网络
+     *
+     * @return
+     */
+    public static boolean isNetConnected() {
+        try {
+            return isWifiConnected() || is4GConnected();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * wifi是否已连接
+     *
+     * @return
+     */
+    public static boolean isWifiConnected() {
+        try {
+            boolean flag = true;
+            ConnectivityManager connMgr = (ConnectivityManager) OpenUtils.getApp().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            boolean isWifiConn = networkInfo.isConnected();
+            if (!isWifiConn) {
+                flag = false;
+            }
+            return flag;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 4G是否已连接
+     *
+     * @return
+     */
+    public static boolean is4GConnected() {
+        try {
+            boolean flag = true;
+            ConnectivityManager connMgr = (ConnectivityManager) OpenUtils.getApp().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            boolean isMobileConn = networkInfo.isConnected();
+            if (!isMobileConn) {
+                flag = false;
+            }
+            return flag;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
 
 }
