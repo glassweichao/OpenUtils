@@ -3,9 +3,8 @@ package com.chaow.openutils;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.os.IInterface;
 
-import com.chaow.openutils.builder.Builder;
+import com.chaow.openutils.component.ActivityUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,11 +18,9 @@ public final class OpenUtils {
     @SuppressLint("StaticFieldLeak")
     private static Application sApplication;
 
+    private static boolean isDebug;
+
     private OpenUtils() {
-
-    }
-
-    public OpenUtils(Builder builder) {
 
     }
 
@@ -47,6 +44,7 @@ public final class OpenUtils {
                 sApplication = app;
             }
         }
+        ActivityUtils.init();
     }
 
     private static Application getApplicationByReflect() {
@@ -80,21 +78,12 @@ public final class OpenUtils {
         return sApplication;
     }
 
-    public static class Builder implements com.chaow.openutils.builder.Builder<OpenUtils> {
-
-        private Application mApplication;
-        private Context mContext;
-
-        public Builder app(Context context) {
-            this.mContext = context;
-            this.mApplication = (Application) context.getApplicationContext();
-            return this;
-        }
-
-        @Override
-        public OpenUtils build() {
-            OpenUtils openUtils = new OpenUtils(this);
-            return openUtils;
-        }
+    public static void setDebug(boolean debug) {
+        isDebug = debug;
     }
+
+    public static boolean isDebug() {
+        return isDebug;
+    }
+
 }

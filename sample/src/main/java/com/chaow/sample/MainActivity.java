@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 
 import com.chaow.openutils.OpenUtils;
+import com.chaow.openutils.basic.LogUtils;
 import com.chaow.sample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,5 +21,6 @@ public class MainActivity extends AppCompatActivity {
         mBinding.btThreadUtils.setOnClickListener(v -> ThreadSampleActivity.start(this));
         mBinding.btToastUtils.setOnClickListener(v -> ToastSampleActivity.start(this));
         mBinding.btPhoneUtils.setOnClickListener(v -> PhoneDeviceSampleActivity.start(this));
+        LogUtils.v(this.getClass().getSimpleName(),"");
     }
 }

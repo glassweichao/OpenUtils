@@ -7,10 +7,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Path;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+
+import com.chaow.openutils.OpenUtils;
+import com.chaow.openutils.basic.ListUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -26,51 +30,18 @@ public final class ActivityUtils {
 
     private static final ActivityLifecycle ACTIVITY_LIFECYCLE = new ActivityLifecycle();
 
-    @SuppressLint("StaticFieldLeak")
-    private static Application sApplication;
-
     private ActivityUtils() {
     }
 
-    public static void init(Application app) {
-        if (sApplication == null) {
-            if (app == null) {
-                sApplication = getApplicationByReflect();
-            } else {
-                sApplication = app;
-            }
-
-            sApplication.registerActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
-        } else {
-            if (app != null && app.getClass() != sApplication.getClass()) {
-                sApplication.unregisterActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
-                ACTIVITY_LIFECYCLE.mActivities.clear();
-                sApplication = app;
-                sApplication.registerActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
-            }
+    public static void init() {
+        if (OpenUtils.getApp() == null) {
+            throw new RuntimeException("please do OpenUtils.init first");
         }
-    }
-
-    private static Application getApplicationByReflect() {
-        try {
-            @SuppressLint("PrivateApi")
-            Class<?> activityThread = Class.forName("android.app.ActivityThread");
-            Object thread = activityThread.getMethod("currentActivityThread").invoke(null);
-            Object app = activityThread.getMethod("getApplication").invoke(thread);
-            if (app == null) {
-                throw new NullPointerException("please init first");
-            }
-            return (Application) app;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (!ListUtils.isListEmpty(ACTIVITY_LIFECYCLE.mActivities)) {
+            OpenUtils.getApp().unregisterActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
+            ACTIVITY_LIFECYCLE.mActivities.clear();
         }
-        throw new NullPointerException("please init first");
+        OpenUtils.getApp().registerActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
     }
 
     public static void finishAllActivity() {
@@ -116,9 +87,9 @@ public final class ActivityUtils {
     public static Context getTopActivity() {
         if (isAppForeground()) {
             Activity topActivity = ACTIVITY_LIFECYCLE.getTopActivity();
-            return topActivity == null ? getApplication() : topActivity;
+            return topActivity == null ? OpenUtils.getApp() : topActivity;
         } else {
-            return getApplication();
+            return OpenUtils.getApp();
         }
     }
 
@@ -129,7 +100,7 @@ public final class ActivityUtils {
      */
     public static boolean isAppForeground() {
         ActivityManager am =
-                (ActivityManager) getApplication().getSystemService(Context.ACTIVITY_SERVICE);
+                (ActivityManager) OpenUtils.getApp().getSystemService(Context.ACTIVITY_SERVICE);
         if (am == null) {
             return false;
         }
@@ -139,40 +110,14 @@ public final class ActivityUtils {
         }
         for (ActivityManager.RunningAppProcessInfo aInfo : info) {
             if (aInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                return aInfo.processName.equals(getApplication().getPackageName());
+                return aInfo.processName.equals(OpenUtils.getApp().getPackageName());
             }
         }
         return false;
     }
 
-    public static Application getApplication() {
-        if (sApplication != null) {
-            return sApplication;
-        }
-        try {
-            @SuppressLint("PrivateApi")
-            Class<?> activityThread = Class.forName("android.app.ActivityThread");
-            Object at = activityThread.getMethod("currentActivityThread").invoke(null);
-            Object app = activityThread.getMethod("getApplication").invoke(at);
-            if (app == null) {
-                throw new NullPointerException("please init first");
-            }
-            init((Application) app);
-            return sApplication;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        throw new NullPointerException("please init first");
-    }
-
     private static boolean isIntentAvailable(final Intent intent) {
-        return getApplication()
+        return OpenUtils.getApp()
                 .getPackageManager()
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
                 .size() > 0;
