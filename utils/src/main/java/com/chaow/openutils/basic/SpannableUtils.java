@@ -2,7 +2,6 @@ package com.chaow.openutils.basic;
 
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
@@ -51,7 +50,7 @@ public class SpannableUtils {
      * @return
      */
     public static SpannableString formatStr(String str, int color, int size, int start, int end) {
-        if (TextUtils.isEmpty(str)) {
+        if (StringUtils.isEmpty(str)) {
             str = "";
         }
         SpannableString ss = new SpannableString(str);

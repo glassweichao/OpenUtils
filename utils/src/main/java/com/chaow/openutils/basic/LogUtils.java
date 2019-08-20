@@ -1,6 +1,5 @@
 package com.chaow.openutils.basic;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.chaow.openutils.OpenUtils;
@@ -71,10 +70,10 @@ public final class LogUtils {
         if (!OpenUtils.isDebug()) {
             return;
         }
-        if (TextUtils.isEmpty(contents)) {
+        if (StringUtils.isEmpty(contents)) {
             return;
         }
-        if (TextUtils.isEmpty(tag)) {
+        if (StringUtils.isEmpty(tag)) {
             tag = getDefaultTag();
         }
         Log.println(type, tag, buildLogBody(contents));

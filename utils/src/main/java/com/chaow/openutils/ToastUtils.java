@@ -1,7 +1,6 @@
 package com.chaow.openutils;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

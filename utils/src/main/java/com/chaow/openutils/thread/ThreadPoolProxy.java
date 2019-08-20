@@ -1,9 +1,6 @@
 package com.chaow.openutils.thread;
 
-import android.os.Build;
-import android.text.TextUtils;
 
-import com.chaow.openutils.Validate;
 import com.chaow.openutils.basic.StringUtils;
 
 import java.util.HashMap;
@@ -11,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 

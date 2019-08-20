@@ -1,6 +1,5 @@
 package com.chaow.openutils.basic;
 
-import android.text.TextUtils;
 
 import java.io.File;
 
@@ -127,7 +126,7 @@ public final class FileUtils {
      * @return true - 有空格
      */
     private static boolean isSpace(final String s) {
-        if (TextUtils.isEmpty(s)) {
+        if (StringUtils.isEmpty(s)) {
             return true;
         }
         for (int i = 0, len = s.length(); i < len; ++i) {

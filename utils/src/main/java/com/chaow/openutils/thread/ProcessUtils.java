@@ -3,7 +3,8 @@ package com.chaow.openutils.thread;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.text.TextUtils;
+
+import com.chaow.openutils.basic.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,11 +30,11 @@ public class ProcessUtils {
 
     public static String getCurrentProcessName(Context context) {
         String name = getCurrentProcessNameByAms(context);
-        if (!TextUtils.isEmpty(name)) {
+        if (!StringUtils.isEmpty(name)) {
             return name;
         }
         name = getCurrentProcessNameByFile(context);
-        if (!TextUtils.isEmpty(name)) {
+        if (!StringUtils.isEmpty(name)) {
             return name;
         }
         name = getCurrentProcessNameByReflect(context);

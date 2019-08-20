@@ -1,6 +1,5 @@
 package com.chaow.openutils.thread;
 
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
