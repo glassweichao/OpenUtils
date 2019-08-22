@@ -3,6 +3,7 @@ package com.chaow.openutils.basic;
 
 import com.chaow.openutils.constant.RegexConstants;
 
+import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +22,36 @@ public final class RegularExpressionUtils implements RegexConstants {
      */
     public static boolean isPositiveFloat(final CharSequence input) {
         return isMatch(REGEX_POSITIVE_FLOAT, input);
+    }
+
+    /**
+     * 是否是手机号
+     *
+     * @param input 手机号
+     * @return {@code true}: 是 <br>{@code false}: 否
+     */
+    public static boolean isPhoneNumber(final CharSequence input) {
+        return isMatch(REGEX_MOBILE_SIMPLE, input);
+    }
+
+    /**
+     * 是否为大陆三大运营商手机号，规则见{@link RegexConstants#REGEX_MOBILE_EXACT}
+     *
+     * @param input 手机号
+     * @return {@code true}: 是 <br>{@code false}: 否
+     */
+    public static boolean isCNPhoneNumber(final CharSequence input) {
+        return isMatch(REGEX_MOBILE_EXACT, input);
+    }
+
+    /**
+     * 是否是座机号
+     *
+     * @param input 座机号
+     * @return {@code true}: 是 <br>{@code false}: 否
+     */
+    public static boolean isTelephoneNumber(final CharSequence input) {
+        return isMatch(REGEX_TEL, input);
     }
 
     /**
