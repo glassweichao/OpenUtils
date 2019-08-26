@@ -8,7 +8,7 @@ import java.util.List;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public class ListUtils {
+public final class ListUtils {
 
     public static boolean isListEmpty(List list) {
         return list == null || list.size() <= 0;

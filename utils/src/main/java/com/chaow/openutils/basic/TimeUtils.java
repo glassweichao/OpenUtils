@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public class TimeUtils {
+public final class TimeUtils {
 
     private final static String DEFAULT_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 

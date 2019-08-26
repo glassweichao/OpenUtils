@@ -3,14 +3,19 @@ package com.chaow.openutils.basic;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
+
+import com.chaow.openutils.thread.ThreadUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,6 +26,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -65,7 +74,7 @@ public final class FileUtils {
      * @return 找到的文件，或者为null
      */
     public static File getFileByPath(final String filePath) {
-        return isSpace(filePath) ? null : new File(filePath);
+        return StringUtils.isSpace(filePath) ? null : new File(filePath);
     }
 
     /**
@@ -93,7 +102,7 @@ public final class FileUtils {
         if (!file.exists()) {
             return false;
         }
-        if (isSpace(newName)) {
+        if (StringUtils.isSpace(newName)) {
             return false;
         }
         if (newName.equals(file.getName())) {
@@ -992,7 +1001,7 @@ public final class FileUtils {
     }
 
     public static String getFileMD5ToString(final String filePath) {
-        File file = isSpace(filePath) ? null : new File(filePath);
+        File file = StringUtils.isSpace(filePath) ? null : new File(filePath);
         return getFileMD5ToString(file);
     }
 
@@ -1044,7 +1053,7 @@ public final class FileUtils {
     }
 
     public static String getDirName(final String filePath) {
-        if (isSpace(filePath)) {
+        if (StringUtils.isSpace(filePath)) {
             return "";
         }
         int lastSep = filePath.lastIndexOf(File.separator);
@@ -1059,7 +1068,7 @@ public final class FileUtils {
     }
 
     public static String getFileName(final String filePath) {
-        if (isSpace(filePath)) {
+        if (StringUtils.isSpace(filePath)) {
             return "";
         }
         int lastSep = filePath.lastIndexOf(File.separator);
@@ -1074,7 +1083,7 @@ public final class FileUtils {
     }
 
     public static String getFileNameNoExtension(final String filePath) {
-        if (isSpace(filePath)) {
+        if (StringUtils.isSpace(filePath)) {
             return "";
         }
         int lastPoi = filePath.lastIndexOf('.');
@@ -1096,7 +1105,7 @@ public final class FileUtils {
     }
 
     public static String getFileExtension(final String filePath) {
-        if (isSpace(filePath)) {
+        if (StringUtils.isSpace(filePath)) {
             return "";
         }
         int lastPoi = filePath.lastIndexOf('.');
@@ -1170,26 +1179,37 @@ public final class FileUtils {
         }
     }
 
-    public interface OnReplaceListener {
-        boolean onReplace();
+    /**
+     * 写入文件
+     *
+     * @param input    输入数据
+     * @param filePath 文件地址
+     */
+    public static void input2File(final String input, final String filePath) {
+        ThreadUtils.execute(new Runnable() {
+            @Override
+            public void run() {
+                BufferedWriter bw = null;
+                try {
+                    bw = new BufferedWriter(new FileWriter(filePath, true));
+                    bw.write(input);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (bw != null) {
+                            bw.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, FileUtils.class.getSimpleName());
     }
 
-    /**
-     * 是否有空格
-     *
-     * @param s 待检字符串
-     * @return true - 有空格
-     */
-    private static boolean isSpace(final String s) {
-        if (StringUtils.isEmpty(s)) {
-            return true;
-        }
-        for (int i = 0, len = s.length(); i < len; ++i) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    public interface OnReplaceListener {
+        boolean onReplace();
     }
 
 }

@@ -11,7 +11,7 @@ import android.text.style.ForegroundColorSpan;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public class SpannableUtils {
+public final class SpannableUtils {
 
     /**
      * 格式化字符串，只颜色

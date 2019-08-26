@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    :
  */
-public class StringUtils {
+public final class StringUtils {
 
     /**
      * 字符串是否为空
@@ -35,4 +35,23 @@ public class StringUtils {
             return str;
         }
     }
+
+    /**
+     * 是否有空格
+     *
+     * @param s 待检字符串
+     * @return true - 有空格
+     */
+    public static boolean isSpace(final String s) {
+        if (StringUtils.isEmpty(s)) {
+            return true;
+        }
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

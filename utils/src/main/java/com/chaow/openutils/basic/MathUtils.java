@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  * github  : https://github.com/glassweichao/OpenUtils
  * desc    : 高精度计算
  */
-public class MathUtils {
+public final class MathUtils {
 
     /** 默认精确度 */
     private final static int DEFAULT_ACCURACY = 2;

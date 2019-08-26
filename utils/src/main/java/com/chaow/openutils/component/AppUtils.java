@@ -15,6 +15,7 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 
 import com.chaow.openutils.OpenUtils;
+import com.chaow.openutils.basic.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -80,7 +81,7 @@ public final class AppUtils {
     }
 
     public static boolean isAppDebug(final String packageName) {
-        if (isSpace(packageName)) return false;
+        if (StringUtils.isSpace(packageName)) return false;
         try {
             PackageManager pm = OpenUtils.getApp().getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
@@ -102,7 +103,7 @@ public final class AppUtils {
      * @return {@code true}: yes<br>{@code false}: no
      */
     public static boolean isAppSystem(final String packageName) {
-        if (isSpace(packageName)) return false;
+        if (StringUtils.isSpace(packageName)) return false;
         try {
             PackageManager pm = OpenUtils.getApp().getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
@@ -123,7 +124,7 @@ public final class AppUtils {
      * @return {@code true}: yes<br>{@code false}: no
      */
     public static boolean isAppForeground(@NonNull final String packageName) {
-        return !isSpace(packageName) && packageName.equals(getForegroundProcessName());
+        return !StringUtils.isSpace(packageName) && packageName.equals(getForegroundProcessName());
     }
 
     public static boolean isAppForeground() {
@@ -139,16 +140,6 @@ public final class AppUtils {
             }
         }
         return false;
-    }
-
-    private static boolean isSpace(final String s) {
-        if (s == null) return true;
-        for (int i = 0, len = s.length(); i < len; ++i) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private static String getForegroundProcessName() {
@@ -243,7 +234,7 @@ public final class AppUtils {
     }
 
     public static void launchApp(final String packageName) {
-        if (isSpace(packageName)) return;
+        if (StringUtils.isSpace(packageName)) return;
         OpenUtils.getApp().startActivity(getLaunchAppIntent(packageName, true));
     }
 
@@ -258,7 +249,7 @@ public final class AppUtils {
     public static void launchApp(final Activity activity,
                                  final String packageName,
                                  final int requestCode) {
-        if (isSpace(packageName)) return;
+        if (StringUtils.isSpace(packageName)) return;
         activity.startActivityForResult(getLaunchAppIntent(packageName), requestCode);
     }
 
