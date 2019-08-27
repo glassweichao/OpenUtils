@@ -145,7 +145,9 @@ public final class ConvertUtils {
      * @return byte
      */
     public static byte[] hexString2Bytes(String hexString) {
-        if (StringUtils.isSpace(hexString)) return null;
+        if (StringUtils.isSpace(hexString)) {
+            return null;
+        }
         int len = hexString.length();
         if (len % 2 != 0) {
             hexString = "0" + hexString;
@@ -267,118 +269,6 @@ public final class ConvertUtils {
             return null;
         }
         return new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
-    }
-
-    /**
-     * bitmap转byte
-     *
-     * @param bitmap 图片
-     * @param format 图片格式
-     * @return 图片的byte数组
-     */
-    public static byte[] bitmap2Bytes(final Bitmap bitmap, final Bitmap.CompressFormat format) {
-        if (bitmap == null) {
-            return null;
-        }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(format, 100, baos);
-        return baos.toByteArray();
-    }
-
-    /**
-     * 图片byte转bitmap
-     *
-     * @param bytes 图片byte
-     * @return bitmap
-     */
-    public static Bitmap bytes2Bitmap(final byte[] bytes) {
-        return (bytes == null || bytes.length == 0)
-                ? null
-                : BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
-    /**
-     * drawable转bitmap
-     *
-     * @param drawable drawable
-     * @return bitmap
-     */
-    public static Bitmap drawable2Bitmap(final Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if (bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-        Bitmap bitmap;
-        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1,
-                    drawable.getOpacity() != PixelFormat.OPAQUE
-                            ? Bitmap.Config.ARGB_8888
-                            : Bitmap.Config.RGB_565);
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                    drawable.getIntrinsicHeight(),
-                    drawable.getOpacity() != PixelFormat.OPAQUE
-                            ? Bitmap.Config.ARGB_8888
-                            : Bitmap.Config.RGB_565);
-        }
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    /**
-     * bitmap 转 drawable
-     *
-     * @param bitmap bitmap
-     * @return drawable
-     */
-    public static Drawable bitmap2Drawable(final Bitmap bitmap) {
-        return bitmap == null ? null : new BitmapDrawable(OpenUtils.getApp().getResources(), bitmap);
-    }
-
-    /**
-     * drawable 转 byte
-     *
-     * @param drawable drawable
-     * @param format   图片类型
-     * @return byte
-     */
-    public static byte[] drawable2Bytes(final Drawable drawable,
-                                        final Bitmap.CompressFormat format) {
-        return drawable == null ? null : bitmap2Bytes(drawable2Bitmap(drawable), format);
-    }
-
-    /**
-     * byte 转 drawable
-     *
-     * @param bytes byte
-     * @return drawable
-     */
-    public static Drawable bytes2Drawable(final byte[] bytes) {
-        return bytes == null ? null : bitmap2Drawable(bytes2Bitmap(bytes));
-    }
-
-    /**
-     * view 转 bitmap
-     *
-     * @param view view
-     * @return bitmap
-     */
-    public static Bitmap view2Bitmap(final View view) {
-        if (view == null) return null;
-        Bitmap ret = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(ret);
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable != null) {
-            bgDrawable.draw(canvas);
-        } else {
-            canvas.drawColor(Color.WHITE);
-        }
-        view.draw(canvas);
-        return ret;
     }
 
     /**

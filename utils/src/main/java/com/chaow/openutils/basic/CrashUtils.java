@@ -95,7 +95,7 @@ public final class CrashUtils {
                 final String crashInfo = sb.toString();
                 final String fullPath = (dir == null ? defaultDir : dir) + time + ".txt";
                 if (FileUtils.createFile(fullPath)) {
-                    FileUtils.input2File(crashInfo, fullPath);
+                    input2File(crashInfo, fullPath);
                 } else {
                     LogUtils.e("CrashUtils", "create " + fullPath + " failed!");
                 }
@@ -109,6 +109,21 @@ public final class CrashUtils {
                 }
             }
         };
+    }
+
+    /**
+     * 将崩溃信息输出到文件
+     *
+     * @param input    崩溃信息
+     * @param filePath 文件地址
+     */
+    private static void input2File(final String input, final String filePath) {
+        ThreadUtils.execute(new Runnable() {
+            @Override
+            public void run() {
+                FileIOUtils.writeFileFromString(filePath, input);
+            }
+        }, CrashUtils.class.getSimpleName());
     }
 
     private CrashUtils() {

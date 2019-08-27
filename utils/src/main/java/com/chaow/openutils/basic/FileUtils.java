@@ -1179,35 +1179,6 @@ public final class FileUtils {
         }
     }
 
-    /**
-     * 写入文件
-     *
-     * @param input    输入数据
-     * @param filePath 文件地址
-     */
-    public static void input2File(final String input, final String filePath) {
-        ThreadUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-                BufferedWriter bw = null;
-                try {
-                    bw = new BufferedWriter(new FileWriter(filePath, true));
-                    bw.write(input);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (bw != null) {
-                            bw.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, FileUtils.class.getSimpleName());
-    }
-
     public interface OnReplaceListener {
         boolean onReplace();
     }

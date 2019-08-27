@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.chaow.openutils.OpenUtils;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,47 +16,41 @@ public final class DefaultSPAdapter implements SharePreferenceAdapter {
     private SharedPreferences mSharedPreferences;
 
     public DefaultSPAdapter() {
-
+        this(OpenUtils.getApp().getPackageName());
     }
 
     public DefaultSPAdapter(String name) {
-    }
-
-
-    @Override
-    public void init(String zone) {
-        mSharedPreferences = OpenUtils.getApp().getSharedPreferences(zone, Context.MODE_PRIVATE);
+        mSharedPreferences = OpenUtils.getApp().getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     @Override
     public boolean put(String key, Object value, boolean isCommit) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        if (value instanceof String) {
-            editor.putString(key, String.valueOf(value));
-        } else if (value instanceof Integer) {
-            editor.putInt(key, (Integer) value);
-        } else if (value instanceof Float) {
-            editor.putFloat(key, (Float) value);
-        } else if (value instanceof Long) {
-            editor.putLong(key, (Long) value);
-        } else if (value instanceof Boolean) {
-            editor.putBoolean(key, (Boolean) value);
-        } else if (value instanceof Set) {
-            editor.putStringSet(key, (Set<String>) value);
+        if (key != null && value != null) {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            if (value instanceof String) {
+                editor.putString(key, String.valueOf(value));
+            } else if (value instanceof Integer) {
+                editor.putInt(key, (Integer) value);
+            } else if (value instanceof Float) {
+                editor.putFloat(key, (Float) value);
+            } else if (value instanceof Long) {
+                editor.putLong(key, (Long) value);
+            } else if (value instanceof Boolean) {
+                editor.putBoolean(key, (Boolean) value);
+            } else if (value instanceof Set) {
+                editor.putStringSet(key, (Set) value);
+            } else {
+                return false;
+            }
+            if (isCommit) {
+                return editor.commit();
+            } else {
+                editor.apply();
+                return true;
+            }
         } else {
             return false;
         }
-        if (isCommit) {
-            return editor.commit();
-        } else {
-            editor.apply();
-            return true;
-        }
-    }
-
-    @Override
-    public Object get(String key, Object defValue) {
-        return null;
     }
 
     @Override
@@ -76,6 +71,11 @@ public final class DefaultSPAdapter implements SharePreferenceAdapter {
             mSharedPreferences.edit().remove(key).apply();
             return true;
         }
+    }
+
+    @Override
+    public void changeName(String name) {
+        mSharedPreferences = OpenUtils.getApp().getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -106,5 +106,15 @@ public final class DefaultSPAdapter implements SharePreferenceAdapter {
     @Override
     public Set<String> getStringSet(String key, Set<String> defValue) {
         return mSharedPreferences.getStringSet(key, defValue);
+    }
+
+    @Override
+    public Map<String, ?> getAll() {
+        return mSharedPreferences.getAll();
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return mSharedPreferences.contains(key);
     }
 }
