@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.chaow.openutils.PhoneUtils;
+import com.chaow.openutils.basic.DeviceUtils;
 import com.chaow.sample.databinding.ActivityPhoneDeviceSampleBinding;
 
 /**
@@ -31,7 +31,7 @@ public class PhoneDeviceSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_phone_device_sample);
         long[] milliseconds = {600, 300, 600, 300};
-        mBinding.btStartVibrator.setOnClickListener(v -> PhoneUtils.startRepeatVibrator(this, milliseconds));
-        mBinding.btCancelVibrator.setOnClickListener(v -> PhoneUtils.cancelVibrator(this));
+        mBinding.btStartVibrator.setOnClickListener(v -> DeviceUtils.startRepeatVibrator(this, milliseconds));
+        mBinding.btCancelVibrator.setOnClickListener(v -> DeviceUtils.cancelVibrator(this));
     }
 }

@@ -22,6 +22,7 @@
         <activity android:name=".ThreadSampleActivity" />
         <activity android:name=".ToastSampleActivity" />
         <activity android:name=".PhoneDeviceSampleActivity" />
+        <activity android:name=".NetWorkSampleActivity" />
     </application>
 
 </manifest>

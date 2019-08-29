@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding.btThreadUtils.setOnClickListener(v -> ThreadSampleActivity.start(this));
         mBinding.btToastUtils.setOnClickListener(v -> ToastSampleActivity.start(this));
         mBinding.btPhoneUtils.setOnClickListener(v -> PhoneDeviceSampleActivity.start(this));
-        LogUtils.v(this.getClass().getSimpleName(),"");
+        mBinding.btNetworkUtils.setOnClickListener(v -> NetWorkSampleActivity.start(this));
+        LogUtils.v(this.getClass().getSimpleName(), "");
     }
 }

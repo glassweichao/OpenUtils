@@ -26,5 +26,11 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="phone utils" />
+
+        <Button
+            android:id="@+id/bt_network_utils"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="network utils" />
     </LinearLayout>
 </layout>
