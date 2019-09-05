@@ -54,4 +54,60 @@ public final class StringUtils {
         return true;
     }
 
+    /**
+     * 首字母大写
+     *
+     * @param s The string.
+     * @return the string with first letter upper.
+     */
+    public static String upperFirstLetter(final String s) {
+        if (isEmpty(s)) {
+            return "";
+        }
+        if (!Character.isLowerCase(s.charAt(0))) {
+            return s;
+        }
+        return (char) (s.charAt(0) - 32) + s.substring(1);
+    }
+
+    /**
+     * 首字母小写
+     *
+     * @param s The string.
+     * @return the string with first letter lower.
+     */
+    public static String lowerFirstLetter(final String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        if (!Character.isUpperCase(s.charAt(0))) {
+            return s;
+        }
+        return (char) (s.charAt(0) + 32) + s.substring(1);
+    }
+
+    /**
+     * 字符串反转
+     *
+     * @param s The string.
+     * @return the reverse string.
+     */
+    public static String reverse(final String s) {
+        if (s == null) {
+            return "";
+        }
+        int len = s.length();
+        if (len <= 1) {
+            return s;
+        }
+        int mid = len >> 1;
+        char[] chars = s.toCharArray();
+        char c;
+        for (int i = 0; i < mid; ++i) {
+            c = chars[i];
+            chars[i] = chars[len - i - 1];
+            chars[len - i - 1] = c;
+        }
+        return new String(chars);
+    }
 }

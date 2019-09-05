@@ -3,14 +3,12 @@ package com.chaow.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.chaow.openutils.ToastUtils;
 import com.chaow.openutils.basic.NetWorkUtils;
 import com.chaow.openutils.thread.ThreadUtils;
 

@@ -1,4 +1,4 @@
-package com.chaow.openutils;
+package com.chaow.openutils.basic;
 
 import android.content.Context;
 import android.view.Gravity;
