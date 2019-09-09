@@ -45,12 +45,12 @@ public interface RegexConstants {
     String REGEX_BLANK_LINE = "\\n\\s*\\r";
 
     /**
-     * 正数
+     * 正整数
      */
     String REGEX_POSITIVE_INTEGER = "^[1-9]\\d*$";
 
     /**
-     * 负数
+     * 负整数
      */
     String REGEX_NEGATIVE_INTEGER = "^-[1-9]\\d*$";
 
@@ -65,9 +65,9 @@ public interface RegexConstants {
     String REGEX_POSITIVE_FLOAT = "^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$";
 
     /**
-     * 数字
+     * 纯数字
      */
-    String REGEX_NUMBER = "[0-9]*";
+    String REGEX_NUMBER = "^[0-9]*$";
 
     /**
      * yyyy-MM-DD 格式的日期
