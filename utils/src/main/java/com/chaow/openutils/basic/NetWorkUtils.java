@@ -43,20 +43,28 @@ import static android.content.Context.WIFI_SERVICE;
  * @author : Char
  * @date : 2019/8/29
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 网络相关工具
  */
 public final class NetWorkUtils {
     private NetWorkUtils() {
 
     }
 
+    /** 网络类型 */
     public enum NetworkType {
+        /** 以太网 */
         NETWORK_ETHERNET,
+        /** wifi */
         NETWORK_WIFI,
+        /** 4G网 */
         NETWORK_4G,
+        /** 3G网 */
         NETWORK_3G,
+        /** 2G网 */
         NETWORK_2G,
+        /** 未知网络 */
         NETWORK_UNKNOWN,
+        /** 没有网络 */
         NETWORK_NO
     }
 
@@ -67,11 +75,21 @@ public final class NetWorkUtils {
         OpenUtils.getApp().startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
+    /**
+     * 是否有网络连接
+     *
+     * @return {@code true}: 已连接 <br>{@code false}: 未连接
+     */
     public static boolean isConnected() {
         NetworkInfo info = getActiveNetworkInfo();
         return info != null && info.isConnected();
     }
 
+    /**
+     * 网络是否可用
+     *
+     * @return {@code true}: 可用 <br>{@code false}: 不可用
+     */
     @WorkerThread
     @RequiresPermission(INTERNET)
     public static boolean isAvailable() {
@@ -101,6 +119,11 @@ public final class NetWorkUtils {
         return false;
     }
 
+    /**
+     * 手机移动数据是否可用
+     *
+     * @return {@code true}: 可用 <br>{@code false}: 不可用
+     */
     public static boolean isMobileDataEnabled() {
         try {
             TelephonyManager tm = (TelephonyManager) OpenUtils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
@@ -122,7 +145,7 @@ public final class NetWorkUtils {
     /**
      * 是否有移动数据网络
      *
-     * @return
+     * @return {@code true}: 有 <br>{@code false}: 没有
      */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     public static boolean isMobileData() {
@@ -148,7 +171,7 @@ public final class NetWorkUtils {
     /**
      * 是否有4G网络
      *
-     * @return
+     * @return {@code true}: 有 <br>{@code false}: 没有
      */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     public static boolean is4G() {
@@ -171,6 +194,11 @@ public final class NetWorkUtils {
         }
     }
 
+    /**
+     * 是否有wifi连接
+     *
+     * @return {@code true}: 有 <br>{@code false}: 没有
+     */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     public static boolean isWifiConnected() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -194,6 +222,11 @@ public final class NetWorkUtils {
         }
     }
 
+    /**
+     * 是否是以太网
+     *
+     * @return {@code true}: 是 <br>{@code false}: 不是
+     */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     public static boolean isEthernet() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -224,6 +257,11 @@ public final class NetWorkUtils {
         }
     }
 
+    /**
+     * wifi是否可用
+     *
+     * @return {@code true}: 可用 <br>{@code false}: 不可用
+     */
     @WorkerThread
     @RequiresPermission(ACCESS_WIFI_STATE)
     public static boolean isWifiEnabled() {
@@ -235,6 +273,11 @@ public final class NetWorkUtils {
         return manager.isWifiEnabled();
     }
 
+    /**
+     * 开启wifi
+     *
+     * @param enabled true - 开启，false - 关闭
+     */
     @RequiresPermission(CHANGE_WIFI_STATE)
     public static void setWifiEnabled(final boolean enabled) {
         @SuppressLint("WifiManagerLeak")
@@ -248,12 +291,22 @@ public final class NetWorkUtils {
         manager.setWifiEnabled(enabled);
     }
 
+    /**
+     * wifi是否可用
+     *
+     * @return {@code true}: 可用 <br>{@code false}: 不可用
+     */
     @WorkerThread
     @RequiresPermission(allOf = {ACCESS_WIFI_STATE, INTERNET})
     public static boolean isWifiAvailable() {
         return isWifiEnabled() && isAvailable();
     }
 
+    /**
+     * 获取运营商
+     *
+     * @return 运营商名
+     */
     public static String getNetworkOperatorName() {
         TelephonyManager tm = (TelephonyManager) OpenUtils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
         if (tm == null) {
@@ -262,6 +315,11 @@ public final class NetWorkUtils {
         return tm.getNetworkOperatorName();
     }
 
+    /**
+     * 网络详情信息
+     *
+     * @return 网络信息
+     */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     private static NetworkInfo getActiveNetworkInfo() {
         ConnectivityManager cm =
@@ -272,6 +330,12 @@ public final class NetWorkUtils {
         return cm.getActiveNetworkInfo();
     }
 
+    /**
+     * 获取IP地址
+     *
+     * @param ipv4 true - ipv4格式
+     * @return IP地址
+     */
     @RequiresPermission(INTERNET)
     public static String getIPAddress(final boolean ipv4) {
         try {
@@ -312,6 +376,11 @@ public final class NetWorkUtils {
         return "";
     }
 
+    /**
+     * 获广播ip地址
+     *
+     * @return 广播ip地址
+     */
     public static String getBroadcastIpAddress() {
         try {
             Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
@@ -335,6 +404,12 @@ public final class NetWorkUtils {
         return "";
     }
 
+    /**
+     * 获取域名地址
+     *
+     * @param domain 域名
+     * @return 域名地址
+     */
     @RequiresPermission(INTERNET)
     public static String getDomainAddress(final String domain) {
         InetAddress inetAddress;
@@ -347,6 +422,11 @@ public final class NetWorkUtils {
         }
     }
 
+    /**
+     * 通过wifi获取ip地址
+     *
+     * @return ip地址
+     */
     @RequiresPermission(ACCESS_WIFI_STATE)
     public static String getIpAddressByWifi() {
         @SuppressLint("WifiManagerLeak")
@@ -357,6 +437,11 @@ public final class NetWorkUtils {
         return Formatter.formatIpAddress(wm.getDhcpInfo().ipAddress);
     }
 
+    /**
+     * 通过网关获取ip地址
+     *
+     * @return ip地址
+     */
     @RequiresPermission(ACCESS_WIFI_STATE)
     public static String getGatewayByWifi() {
         @SuppressLint("WifiManagerLeak")
@@ -367,6 +452,9 @@ public final class NetWorkUtils {
         return Formatter.formatIpAddress(wm.getDhcpInfo().gateway);
     }
 
+    /**
+     * @return
+     */
     @RequiresPermission(ACCESS_WIFI_STATE)
     public static String getNetMaskByWifi() {
         @SuppressLint("WifiManagerLeak")
@@ -377,6 +465,9 @@ public final class NetWorkUtils {
         return Formatter.formatIpAddress(wm.getDhcpInfo().netmask);
     }
 
+    /**
+     * @return
+     */
     @RequiresPermission(ACCESS_WIFI_STATE)
     public static String getServerAddressByWifi() {
         @SuppressLint("WifiManagerLeak")
@@ -387,6 +478,11 @@ public final class NetWorkUtils {
         return Formatter.formatIpAddress(wm.getDhcpInfo().serverAddress);
     }
 
+    /**
+     * 获取网络类型
+     *
+     * @return 网络类型 {@link NetworkType}
+     */
     @RequiresPermission(ACCESS_NETWORK_STATE)
     public static NetworkType getNetworkType() {
         if (isEthernet()) {
@@ -448,6 +544,9 @@ public final class NetWorkUtils {
         NetworkChangedReceiver.getInstance().unregisterListener(listener);
     }
 
+    /**
+     * 网络改变接收器
+     */
     public static final class NetworkChangedReceiver extends BroadcastReceiver {
 
         private static NetworkChangedReceiver getInstance() {
@@ -457,6 +556,11 @@ public final class NetWorkUtils {
         private NetworkType mType;
         private Set<OnNetworkStatusChangedListener> mListeners = new HashSet<>();
 
+        /**
+         * 注册监听
+         *
+         * @param listener 网络状态监听
+         */
         void registerListener(final OnNetworkStatusChangedListener listener) {
             if (listener == null) {
                 return;
@@ -476,6 +580,11 @@ public final class NetWorkUtils {
             });
         }
 
+        /**
+         * 取消注册
+         *
+         * @param listener 网络状态监听
+         */
         void unregisterListener(final OnNetworkStatusChangedListener listener) {
             if (listener == null) {
                 return;
@@ -524,6 +633,9 @@ public final class NetWorkUtils {
         }
     }
 
+    /**
+     * 网络状态回调
+     */
     public interface OnNetworkStatusChangedListener {
         void onDisconnected();
 

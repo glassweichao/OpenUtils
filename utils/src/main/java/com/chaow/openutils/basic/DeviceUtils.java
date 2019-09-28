@@ -47,7 +47,7 @@ import static android.content.Context.WIFI_SERVICE;
  * @author : Char
  * @date : 2019/7/4
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 手机工具，提供手机硬件设备相关操作
  */
 public final class DeviceUtils {
 

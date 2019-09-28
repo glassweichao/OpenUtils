@@ -23,7 +23,7 @@ import java.io.OutputStream;
  * @author : Char
  * @date : 2019/8/26
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 转换工具
  */
 public final class ConvertUtils {
 

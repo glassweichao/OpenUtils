@@ -12,7 +12,7 @@ import java.net.URLEncoder;
  * @author : Char
  * @date : 2019/8/26
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 编码相关工具
  */
 public final class EncodeUtils {
 

@@ -19,7 +19,7 @@ import com.chaow.openutils.OpenUtils;
  * @author : Char
  * @date : 2019/8/28
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 软键盘工具
  */
 public final class KeyboardUtils {
 
