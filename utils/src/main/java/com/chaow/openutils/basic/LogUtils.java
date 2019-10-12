@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author : Char
  * @date : 2019/7/11
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 日志工具
  */
 public final class LogUtils {
 

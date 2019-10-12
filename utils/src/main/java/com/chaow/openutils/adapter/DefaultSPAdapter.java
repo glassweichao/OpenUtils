@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Creator Char 2019/8/26
+ * @author : Char
+ * @date : 2019/8/26
+ * github  : https://github.com/glassweichao/OpenUtils
+ * desc    : 默认SharedPreferences适配器
  */
 public final class DefaultSPAdapter implements SharePreferenceAdapter {
 

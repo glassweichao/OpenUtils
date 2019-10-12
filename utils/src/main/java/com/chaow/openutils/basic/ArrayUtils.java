@@ -7,7 +7,7 @@ import java.util.Arrays;
  * @author : Char
  * @date : 2019/9/1
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 数组工具类
  */
 public final class ArrayUtils {
 
@@ -476,7 +476,6 @@ public final class ArrayUtils {
         }
         return result;
     }
-
 
 
 }

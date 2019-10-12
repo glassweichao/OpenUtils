@@ -6,7 +6,7 @@ import java.util.List;
  * @author : Char
  * @date : 2019/7/11
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 列表工具
  */
 public final class ListUtils {
 

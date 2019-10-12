@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Creator Char 2019/8/26
- *
  * @author Char
- * @date
+ * @date 2019/8/26
+ * github  : https://github.com/glassweichao/OpenUtils
+ * desc    : SharedPreferences适配器接口，继承此接口以实现自己的SharedPreferences。
  */
 public interface SharePreferenceAdapter {
 
