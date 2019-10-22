@@ -1,6 +1,7 @@
 package com.chaow.openutils.basic;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
@@ -71,4 +72,51 @@ public class RegularExpressionUtilsTest {
         assertFalse(RegularExpressionUtils.isUrl(url9));
     }
 
+    @Test
+    public void isZh() {
+        String zn1 = null;
+        String zn2 = "中文";
+        String zn3 = "123aabb";
+        String zn4 = "中文abc";
+        String zn5 = "中文123";
+
+        assertFalse(RegularExpressionUtils.isZh(zn1));
+        assertTrue(RegularExpressionUtils.isZh(zn2));
+        assertFalse(RegularExpressionUtils.isZh(zn3));
+        assertFalse(RegularExpressionUtils.isZh(zn4));
+        assertFalse(RegularExpressionUtils.isZh(zn5));
+    }
+
+    @Test
+    public void isIPv4() {
+        String ipv4s1 = null;
+        String ipv4s2 = "255.255.255.0";
+        String ipv4s3 = "25.25.25.0";
+        String ipv4s4 = "0.0.0.0";
+        String ipv4s5 = "0.0.0";
+        String ipv4s6 = "2555.2555.0.0";
+        String ipv4s7 = "255,255,2,1";
+        String ipv4s8 = "255255";
+
+        assertFalse(RegularExpressionUtils.isIPv4(ipv4s1));
+        assertTrue(RegularExpressionUtils.isIPv4(ipv4s2));
+        assertTrue(RegularExpressionUtils.isIPv4(ipv4s3));
+        assertTrue(RegularExpressionUtils.isIPv4(ipv4s4));
+        assertFalse(RegularExpressionUtils.isIPv4(ipv4s5));
+        assertFalse(RegularExpressionUtils.isIPv4(ipv4s6));
+        assertFalse(RegularExpressionUtils.isIPv4(ipv4s7));
+        assertFalse(RegularExpressionUtils.isIPv4(ipv4s8));
+
+    }
+
+    @Test
+    public void hasBlankLine() {
+        String content1 = null;
+        String content2 = "123\n123";
+        String content3 = "123";
+        System.out.println(content2);
+        assertFalse(RegularExpressionUtils.hasBlankLine(content1));
+        assertTrue(RegularExpressionUtils.hasBlankLine(content2));
+        assertFalse(RegularExpressionUtils.hasBlankLine(content3));
+    }
 }

@@ -98,7 +98,7 @@ public final class RegularExpressionUtils implements RegexConstants {
     /**
      * 是否包含换行
      *
-     * @param input 输入呢绒
+     * @param input 输入
      * @return {@code true}: 是 <br>{@code false}: 否
      */
     public static boolean hasBlankLine(final CharSequence input) {
@@ -168,7 +168,7 @@ public final class RegularExpressionUtils implements RegexConstants {
     }
 
     public static boolean isContain(final String regex, final CharSequence input) {
-        return !StringUtils.isEmpty(input) && Pattern.compile(regex).matcher(input).find();
+        return !StringUtils.isEmpty(input) && Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE).matcher(input).find();
     }
 
 }

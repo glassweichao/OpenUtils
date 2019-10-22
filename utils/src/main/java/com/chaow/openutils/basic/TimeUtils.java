@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @author : Char
  * @date : 2019/6/27
  * github  : https://github.com/glassweichao/OpenUtils
- * desc    :
+ * desc    : 时间格式化工具
  */
 public final class TimeUtils {
 
@@ -68,6 +68,9 @@ public final class TimeUtils {
 
     public static long string2Millis(final String time, @NonNull final DateFormat dateFormat) {
         try {
+            if (StringUtils.isEmpty(time)) {
+                return -1;
+            }
             return dateFormat.parse(time).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -75,7 +78,7 @@ public final class TimeUtils {
         return -1;
     }
 
-    public static long date2Millis(final Date date) {
+    public static long date2Millis(@NonNull final Date date) {
         return date.getTime();
     }
 
@@ -85,6 +88,9 @@ public final class TimeUtils {
 
     public static Date string2Date(final String date, @NonNull DateFormat dateFormat) {
         try {
+            if (StringUtils.isEmpty(date)) {
+                return null;
+            }
             return dateFormat.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -97,7 +103,7 @@ public final class TimeUtils {
      *
      * @return
      */
-    public static long getTimeSpan(final Date date1, final Date date2) {
+    public static long getTimeSpan(@NonNull final Date date1, @NonNull final Date date2) {
         return getTimeSpan(date2Millis(date1), date2Millis(date2));
     }
 
@@ -114,11 +120,21 @@ public final class TimeUtils {
         return Math.abs(time1 - time2);
     }
 
+    /**
+     * 获取两个时间是时差，并指定时间单位
+     *
+     * @param timeSpan 时差
+     * @param timeUnit 时间单位
+     * @return 时差
+     */
     public static long getTimeSpanWithUnit(long timeSpan, TimeUnit timeUnit) {
         return timeUnit.convert(timeSpan, TimeUnit.MILLISECONDS);
     }
 
     public static boolean isLeapYear(final Date date) {
+        if (date == null) {
+            return false;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int year = cal.get(Calendar.YEAR);
@@ -129,11 +145,15 @@ public final class TimeUtils {
         return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
     }
 
-    public static String getChineseWeek(final Date date) {
+    public static String getChineseWeek(@NonNull final Date date) {
         return new SimpleDateFormat("E", Locale.CHINA).format(date);
     }
 
     public static String getChineseWeek(final String time, @NonNull final DateFormat format) {
-        return getChineseWeek(string2Date(time, format));
+        Date date = string2Date(time, format);
+        if (date == null) {
+            return null;
+        }
+        return getChineseWeek(date);
     }
 }

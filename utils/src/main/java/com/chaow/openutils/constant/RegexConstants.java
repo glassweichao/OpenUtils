@@ -42,7 +42,7 @@ public interface RegexConstants {
     /**
      * 换行匹配
      */
-    String REGEX_BLANK_LINE = "\\n\\s*\\r";
+    String REGEX_BLANK_LINE = "\\r|\\n";
 
     /**
      * 正整数

@@ -37,14 +37,14 @@ public final class StringUtils {
     }
 
     /**
-     * 是否有空格
+     * 是否为空白字符
      *
      * @param s 待检字符串
      * @return true - 有空格
      */
     public static boolean isSpace(final String s) {
         if (StringUtils.isEmpty(s)) {
-            return true;
+            return false;
         }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
