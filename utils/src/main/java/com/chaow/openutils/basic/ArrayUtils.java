@@ -155,7 +155,8 @@ public final class ArrayUtils {
         }
         try {
             return Array.get(array, index);
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return defaultValue;
         }
     }

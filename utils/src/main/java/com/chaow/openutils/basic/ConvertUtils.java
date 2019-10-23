@@ -60,20 +60,23 @@ public final class ConvertUtils {
      * @return byte数组
      */
     public static byte[] bits2Bytes(String bits) {
-        int lenMod = bits.length() % 8;
-        int byteLen = bits.length() / 8;
+        int l = 8;
+        int lenMod = bits.length() % l;
+        int byteLen = bits.length() / l;
         // add "0" until length to 8 times
         if (lenMod != 0) {
-            for (int i = lenMod; i < 8; i++) {
-                bits = "0" + bits;
+            StringBuilder bitsBuilder = new StringBuilder(bits);
+            for (int i = lenMod; i < l; i++) {
+                bitsBuilder.insert(0, "0");
             }
+            bits = bitsBuilder.toString();
             byteLen++;
         }
         byte[] bytes = new byte[byteLen];
         for (int i = 0; i < byteLen; ++i) {
-            for (int j = 0; j < 8; ++j) {
+            for (int j = 0; j < l; ++j) {
                 bytes[i] <<= 1;
-                bytes[i] |= bits.charAt(i * 8 + j) - '0';
+                bytes[i] |= bits.charAt(i * l + j) - '0';
             }
         }
         return bytes;
@@ -107,7 +110,9 @@ public final class ConvertUtils {
      * @return byte数组
      */
     public static byte[] chars2Bytes(final char[] chars) {
-        if (chars == null || chars.length <= 0) return null;
+        if (chars == null || chars.length <= 0) {
+            return null;
+        }
         int len = chars.length;
         byte[] bytes = new byte[len];
         for (int i = 0; i < len; i++) {
